@@ -12,13 +12,13 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build \
     -trimpath \
     -ldflags="-s -w" \
-    -o /out/driverstate \
-    ./cmd/driverstate
+    -o /out/auth \
+    ./cmd/auth
 
 FROM gcr.io/distroless/static-debian12:nonroot
 
-COPY --from=builder /out/driverstate /driverstate
+COPY --from=builder /out/auth /auth
 
-EXPOSE 8081
+EXPOSE 50053
 
-ENTRYPOINT ["/driverstate"]
+ENTRYPOINT ["/auth"]

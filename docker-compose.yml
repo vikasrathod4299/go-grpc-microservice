@@ -1,6 +1,55 @@
-version: '3.8'
-
 services:
+  auth:
+    build:
+      context: .
+      dockerfile: ./deployments/auth/Dockerfile
+    environment:
+      POSTGRES_DSN: postgres://auth_user:auth_secret@postgres:5432/authdb?sslmode=disable
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  dispatch:
+    build:
+      context: .
+      dockerfile: ./deployments/dispatch/Dockerfile
+    environment:
+      POSTGRES_DSN: postgres://dispatch_user:dispatch_secret@postgres:5432/dispatchdb?sslmode=disable
+      LOCATION_SERVICE_URL: location:50051
+      KAFKA_BROKERS: kafka:29092
+    container_name: uber_dispatch
+    ports:
+      - "50052:50052"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      location:
+        condition: service_started
+
+  location:
+    build:
+      context: .
+      dockerfile: ./deployments/location/Dockerfile
+    container_name: uber_location
+    environment:
+      REDIS_ADDR: redis:6379
+    ports:
+      - "50051:50051"
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  driverstate:
+    build:
+      context: .
+      dockerfile: ./deployments/driverstate/Dockerfile
+    environment:
+      POSTGRES_DSN: postgres://driver_user:driver_secret@postgres:5432/driverdb?sslmode=disable
+      LOCATION_SERVICE_URL: location:50051
+    depends_on:
+      postgres:
+        condition: service_healthy
+
   redis:
     image: redis:7-alpine
     container_name: uber_redis
@@ -10,23 +59,27 @@ services:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s
       timeout: 3s
-      retries: 5
-
   postgres:
     image: postgres:16-alpine
     container_name: uber_postgres
     environment:
-      POSTGRES_USER: uber
-      POSTGRES_PASSWORD: secret
-      POSTGRES_DB: uberclone
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
     ports:
       - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./deployments/postgres/init-database.sql:/docker-entrypoint-initdb.d/01-init-databases.sql:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U uber -d uberclone"]
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U postgres -d postgres"
+        ]
       interval: 5s
       timeout: 3s
       retries: 5
-
   kafka:
     image: confluentinc/cp-kafka:7.5.0
     container_name: uber_kafka
@@ -41,11 +94,12 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_PROCESS_ROLES: 'broker,controller'
-      KAFKA_KEY_SHARES: '1@kafka:29093'
       KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
       KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
       KAFKA_LOG_DIRS: '/tmp/kraft-combined-logs'
-      KAFKA_LISTENER_NAMES: 'CONTROLLER,PLAINTEXT,PLAINTEXT_HOST'
       KAFKA_LISTENERS: 'PLAINTEXT://0.0.0.0:29092,CONTROLLER://0.0.0.0:29093,PLAINTEXT_HOST://0.0.0.0:9092'
       KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka:29093'
       CLUSTER_ID: 'MkU3OEVBNTcwNTJENDM2Qk'
+
+volumes:
+  postgres_data:
