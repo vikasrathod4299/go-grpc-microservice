@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package dispatch;
+
+option go_package = "github.com/vikasrathod4299/microservice/proto/dispatch";
+
+enum TripStatus  {
+  TRIP_STATUS_UNSPECIFIED = 0;
+  SEARCHING = 1;
+  DRIVER_ASSIGNED = 2;
+  DRIVER_ARRIVED = 3;
+  IN_TRANSIT = 4;
+  COMPLETED = 5;
+  CANCELED = 6;
+}
+
+message TripRequest {
+  string rider_id = 1;
+  double pickup_lat = 2;
+  double pickup_lng = 3;
+  double dropoff_lat = 4;
+  double dropoff_lng = 5;
+}
+
+message Trip {
+  string trip_id = 1;
+  string rider_id = 2;
+  string driver_id = 3;
+  TripStatus status = 4;
+  double pickup_lat = 5;
+  double pickup_lng = 6;
+  double dropoff_lat = 7;
+  double dropoff_lng = 8;
+  int64 created_at = 9;
+  int64 updated_at = 10;
+}
+
+
+message TripId {
+  string trip_id = 1;
+}
+
+message UpdateTripStatusRequest {
+  string trip_id = 1;
+  TripStatus status = 2;
+  string driver_id = 3;
+}
+
+service DispatchService {
+  rpc RequestTrip(TripRequest) returns (Trip);
+  rpc GetTrip(TripId) returns (Trip);
+  rpc UpdateTripStatus(UpdateTripStatusRequest) returns (Trip);
+}

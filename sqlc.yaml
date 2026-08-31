@@ -1,0 +1,23 @@
+version: "2"
+sql:
+  - engine: "postgresql"
+    queries: "./internal/dispatch/repository/queries.sql"
+    schema: "./internal/dispatch/repository/migrations"
+    gen:
+      go:
+        package: "dispatchRepo"
+        out: "./internal/dispatch/repository/db"
+        sql_package: "pgx/v5"
+        emit_json_tags: true
+        emit_interface: true
+  - engine: "postgresql"
+    queries: "./internal/auth/repository/queries.sql"
+    schema: "./internal/auth/repository/migrations"
+    gen:
+      go:
+        package: "authRepo"
+        out: "./internal/auth/repository/db"
+        sql_package: "pgx/v5"
+        emit_json_tags: true
+        emit_interface: true
+

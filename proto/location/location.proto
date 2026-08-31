@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package location;
+
+option go_package = "github.com/vikasrathod4299/microservice/proto/location";
+
+// A single GPS ping from a driver's phone
+message DriverLocation {
+  string driver_id = 1;
+  double latitude  = 2;
+  double longitude = 3;
+  int64  timestamp = 4;
+}
+
+// Request: "find drivers near this point"
+message NearbyDriversRequest {
+  double latitude  = 1;
+  double longitude = 2;
+  double radius_km = 3;
+  int32  limit     = 4;
+}
+
+// Response: list of nearby drivers with their distance
+message NearbyDriversResponse {
+  repeated NearbyDriver drivers = 1;
+}
+
+message NearbyDriver {
+  string driver_id   = 1;
+  double latitude    = 2;
+  double longitude   = 3;
+  double distance_km = 4;
+}
+
+// Used for removing a driver from the geo-index
+message DriverID {
+  string driver_id = 1;
+}
+
+// Generic response
+message LocationResponse {
+  bool   success = 1;
+  string message = 2;
+}
+
+service LocationService {
+  rpc StreamDriverLocation(stream DriverLocation) returns (LocationResponse);
+  rpc FindNearbyDrivers(NearbyDriversRequest) returns (NearbyDriversResponse);
+  rpc RemoveDriver(DriverID) returns (LocationResponse);
+}

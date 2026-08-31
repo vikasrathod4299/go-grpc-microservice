@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package driver;
+
+option go_package = "github.com/vikasrathod4299/microservice/proto/driver";
+
+enum DriverAvailability {
+  DRIVER_AVAILABILITY_UNSPECIFIED = 0;
+  OFFLINE = 1;
+  ONLINE = 2;
+  ON_TRIP = 3;
+}
+
+message Driver {
+  string id = 1;
+  string name = 2;
+  string phone = 3;
+  string vehicle_make = 4;
+  string vehicle_model = 5;
+  string license_plate = 6;
+  DriverAvailability availability = 7;
+}
+
+message CreateDriverRequest {
+  string name = 1;
+  string phone = 2;
+  string vehicle_make = 3;
+  string vehicle_model = 4;
+  string license_plate = 5;
+}
+
+message DriverId {
+  string driver_id = 1;
+}
+
+message UpdateDriverAvailabilityRequest {
+  string driver_id = 1;
+  DriverAvailability availability = 2;
+}
+
+message DriverResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+service DriverService {
+  rpc CreateDriver(CreateDriverRequest) returns (Driver);
+  rpc GetDriver(DriverId) returns (Driver);
+  rpc UpdateDriverAvailability(UpdateDriverAvailabilityRequest) returns (DriverResponse);
+}
