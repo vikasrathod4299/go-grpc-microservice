@@ -1,38 +1,5 @@
 package service
 
-/*
-================================================================================
-FILE: internal/dispatch/service/dispatch.go
-================================================================================
-
-PURPOSE:
-Core orchestration logic for trips.
-1. Creates trip in PostgreSQL.
-2. Calls Location Service via gRPC to find nearby available drivers.
-3. Assigns closest driver to trip.
-4. Updates trip state via State Machine validator.
-5. Publishes event to Kafka topic (`TripCreated`, `TripAssigned`, `TripCompleted`).
-
-LEARNING GO CONCEPTS:
-- Microservice orchestration pattern.
-- Combining DB transactions, gRPC client calls, and Kafka publishing.
-
-WHAT YOU NEED TO IMPLEMENT HERE:
-1. `DispatchService` struct:
-   - repo TripRepository
-   - locationClient LocationClient
-   - publisher EventPublisher
-
-2. `CreateTrip(ctx context.Context, riderID string, pLat, pLng, dLat, dLng float64) (*Trip, error)`
-   - Create trip record with status = SEARCHING.
-   - Query Location Service for 5 nearby drivers within 3 km.
-   - If driver found -> Assign driver, update status to DRIVER_ASSIGNED.
-   - Save to Postgres repo.
-   - Publish `TripAssignedEvent` to Kafka.
-   - Return Trip.
-================================================================================
-*/
-
 import (
 	"context"
 	"crypto/rand"
