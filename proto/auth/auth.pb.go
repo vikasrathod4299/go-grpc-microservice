@@ -294,7 +294,7 @@ type AuthResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	AccessToken   string                 `protobuf:"bytes,1,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty"`
 	TokenType     string                 `protobuf:"bytes,2,opt,name=token_type,json=tokenType,proto3" json:"token_type,omitempty"`
-	ExpiresAt     string                 `protobuf:"bytes,3,opt,name=expires_at,json=expiresAt,proto3" json:"expires_at,omitempty"`
+	ExpiresAt     int64                  `protobuf:"varint,3,opt,name=expires_at,json=expiresAt,proto3" json:"expires_at,omitempty"`
 	User          *User                  `protobuf:"bytes,4,opt,name=user,proto3" json:"user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -344,11 +344,11 @@ func (x *AuthResponse) GetTokenType() string {
 	return ""
 }
 
-func (x *AuthResponse) GetExpiresAt() string {
+func (x *AuthResponse) GetExpiresAt() int64 {
 	if x != nil {
 		return x.ExpiresAt
 	}
-	return ""
+	return 0
 }
 
 func (x *AuthResponse) GetUser() *User {
@@ -431,7 +431,7 @@ const file_proto_auth_auth_proto_rawDesc = "" +
 	"\n" +
 	"token_type\x18\x02 \x01(\tR\ttokenType\x12\x1d\n" +
 	"\n" +
-	"expires_at\x18\x03 \x01(\tR\texpiresAt\x12\x1e\n" +
+	"expires_at\x18\x03 \x01(\x03R\texpiresAt\x12\x1e\n" +
 	"\x04user\x18\x04 \x01(\v2\n" +
 	".auth.UserR\x04user\" \n" +
 	"\x0eGetUserRequest\x12\x0e\n" +

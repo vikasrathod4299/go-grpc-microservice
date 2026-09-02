@@ -35,7 +35,7 @@ message LoginRequest {
 message AuthResponse {
   string access_token = 1;
   string token_type = 2;
-  string expires_at = 3;
+  int64 expires_at = 3;
   User user = 4;
 }
 
