@@ -18,24 +18,6 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-/*
-================================================================================
-SERVICE: Location Service - Spatial Engine (Entry Point)
-================================================================================
-
-RESPONSIBILITIES:
-1. Initialize Redis Client connection (for sub-millisecond GEOADD/GEOSEARCH ops).
-2. Instantiate Location Repository (`internal/location/repository`).
-3. Instantiate Location Service (`internal/location/service`).
-4. Register Location gRPC Server (`internal/location/handler`).
-5. Start gRPC Server on port :50051.
-6. Handle Graceful Shutdown (stop gRPC server & close Redis connection cleanly).
-
-HOW TO RUN THIS SERVICE:
-   go run cmd/location/main.go
-================================================================================
-*/
-
 const locationAddr = ":50051"
 
 func main() {

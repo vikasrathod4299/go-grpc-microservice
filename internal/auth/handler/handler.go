@@ -15,10 +15,10 @@ type AuthGrpcHandler struct {
 	authPb.UnimplementedAuthServiceServer
 }
 
-func NewAuthGrpcService(service *service.AuthSerivce) (*AuthGrpcHandler, error) {
+func NewAuthGrpcService(service *service.AuthSerivce) *AuthGrpcHandler {
 	return &AuthGrpcHandler{
 		service: service,
-	}, nil
+	}
 }
 
 func (h *AuthGrpcHandler) Register(ctx context.Context, req *authPb.RegisterRequest) (*authPb.AuthResponse, error) {
@@ -45,7 +45,7 @@ func (h *AuthGrpcHandler) Register(ctx context.Context, req *authPb.RegisterRequ
 	return authResultToProto(result), nil
 }
 
-func (h *AuthGrpcHandler) Login(ctx context.Context, req *authPb.RegisterRequest) (*authPb.AuthResponse, error) {
+func (h *AuthGrpcHandler) Login(ctx context.Context, req *authPb.LoginRequest) (*authPb.AuthResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "request is required")
 	}
