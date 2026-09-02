@@ -16,6 +16,7 @@ import (
 	"github.com/vikasrathod4299/microservice/internal/gateway/hub"
 	customMiddleware "github.com/vikasrathod4299/microservice/internal/gateway/middleware"
 	"github.com/vikasrathod4299/microservice/pkg/config"
+	authPb "github.com/vikasrathod4299/microservice/proto/auth"
 	dispatchPb "github.com/vikasrathod4299/microservice/proto/dispatch"
 	driverPb "github.com/vikasrathod4299/microservice/proto/driver"
 	"google.golang.org/grpc"
@@ -44,6 +45,15 @@ func main() {
 
 	driverPb := driverPb.NewDriverServiceClient(driverConn)
 
+	authConn, err := grpc.NewClient(cfg.AuthServiceURL, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Fatalf("failed to dial auth service", cfg.AuthServiceURL, err)
+	}
+	defer authConn.Close()
+
+	authClient := authPb.NewAuthServiceClient(authConn)
+	authRestHandler := handler.NewAuthRESTHandler(authClient)
+
 	restHandler := handler.NewGatewayRESTHandler(dispatchPb, driverPb)
 
 	hub := hub.NewHub()
@@ -61,6 +71,13 @@ func main() {
 	})
 
 	r.Route("/api", func(r chi.Router) {
+		// auth/user
+
+		r.Route("/auth", func(r chi.Router) {
+			r.Post("/register", authRestHandler.Register)
+			r.Post("/login", authRestHandler.Login)
+		})
+		// dispatch
 		r.Get("/ride", restHandler.RequestRide)
 		r.Post("/ride", restHandler.RequestRide)
 	})

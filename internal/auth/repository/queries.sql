@@ -31,4 +31,4 @@ SELECT
   created_at,
   updated_at
 from users
-WHERE LOWER(id) = LOWER(sqlc.arg(email));
+WHERE LOWER(email) = LOWER(sqlc.arg(email));

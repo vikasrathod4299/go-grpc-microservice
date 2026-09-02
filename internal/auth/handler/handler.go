@@ -101,7 +101,7 @@ func userToProto(user *service.User) *authPb.User {
 
 func roleFromProto(role authPb.UserRole) (service.Role, error) {
 	switch role {
-	case authPb.UserRole_DRVIER:
+	case authPb.UserRole_DRIVER:
 		return service.RoleDriver, nil
 	case authPb.UserRole_RIDER:
 		return service.RoleRider, nil
@@ -115,7 +115,7 @@ func roleToProto(
 ) authPb.UserRole {
 	switch role {
 	case service.RoleDriver:
-		return authPb.UserRole_DRVIER
+		return authPb.UserRole_DRIVER
 	case service.RoleRider:
 		return authPb.UserRole_RIDER
 	default:

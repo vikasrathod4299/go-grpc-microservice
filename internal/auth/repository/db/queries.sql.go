@@ -74,7 +74,7 @@ SELECT
   created_at,
   updated_at
 from users
-WHERE LOWER(id) = LOWER($1)
+WHERE LOWER(email) = LOWER($1)
 `
 
 func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error) {

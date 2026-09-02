@@ -32,6 +32,7 @@ type Config struct {
 	Port               string
 	LocationServiceURL string
 	DispatchServiceURL string
+	AuthServiceURL     string
 	DriverStateURL     string
 	RedisAddr          string
 	PostgresDSN        string
@@ -44,6 +45,7 @@ func LoadConfig() *Config {
 		Port:               getEnv("PORT", "8080"),
 		LocationServiceURL: getEnv("LOCATION_SERVICE_URL", "localhost:50051"),
 		DispatchServiceURL: getEnv("DISPATCH_SERVICE_URL", "localhost:50052"),
+		AuthServiceURL:     getEnv("AUTH_SERVICE_URL", "localhost:50053"),
 		DriverStateURL:     getEnv("DRIVER_STATE_URL", "localhost:8081"),
 		RedisAddr:          getEnv("REDIS_ADDR", "localhost:6379"),
 		PostgresDSN:        getEnv("POSTGRES_DSN", "postgres://uber:secret@localhost:5432/uberclone?sslmode=disable"),

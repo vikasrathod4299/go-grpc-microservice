@@ -26,7 +26,7 @@ type UserRole int32
 const (
 	UserRole_USER_ROLE_UNSPECIFIED UserRole = 0
 	UserRole_RIDER                 UserRole = 1
-	UserRole_DRVIER                UserRole = 2
+	UserRole_DRIVER                UserRole = 2
 )
 
 // Enum value maps for UserRole.
@@ -34,12 +34,12 @@ var (
 	UserRole_name = map[int32]string{
 		0: "USER_ROLE_UNSPECIFIED",
 		1: "RIDER",
-		2: "DRVIER",
+		2: "DRIVER",
 	}
 	UserRole_value = map[string]int32{
 		"USER_ROLE_UNSPECIFIED": 0,
 		"RIDER":                 1,
-		"DRVIER":                2,
+		"DRIVER":                2,
 	}
 )
 
@@ -440,7 +440,7 @@ const file_proto_auth_auth_proto_rawDesc = "" +
 	"\x15USER_ROLE_UNSPECIFIED\x10\x00\x12\t\n" +
 	"\x05RIDER\x10\x01\x12\n" +
 	"\n" +
-	"\x06DRVIER\x10\x022\xa2\x01\n" +
+	"\x06DRIVER\x10\x022\xa2\x01\n" +
 	"\vAuthService\x125\n" +
 	"\bRegister\x12\x15.auth.RegisterRequest\x1a\x12.auth.AuthResponse\x12/\n" +
 	"\x05Login\x12\x12.auth.LoginRequest\x1a\x12.auth.AuthResponse\x12+\n" +

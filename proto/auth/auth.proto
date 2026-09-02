@@ -7,7 +7,7 @@ option go_package = "github.com/vikasrathod4299/microservice/proto/auth";
 enum UserRole{
   USER_ROLE_UNSPECIFIED = 0;
   RIDER = 1;
-  DRVIER = 2;
+  DRIVER = 2;
 }
 message User {
   string id = 1;
